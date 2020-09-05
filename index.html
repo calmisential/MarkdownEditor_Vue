@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown编辑器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/1.1.1/marked.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/moment.js/2.9.0/moment.js"></script>
+
+    <div id="notebook">
+        <aside class="side-bar">
+            <div class="toolbar">
+                <button @click="addNote" :title="addButtonTitle">添加笔记</button>
+            </div>
+            <div class="notes">
+                <div class="note" :class="{selected: item === selectedNote, top: item.favorite}" v-for="item of sortedNotes"
+                    @click="selectNote(item)">
+                    {{item.title}}</div>
+            </div>
+        </aside>
+        <template v-if="selectedNote">
+            <section class="main">
+                <div class="toolbar">
+                    <input v-model="selectedNote.title" placeholder="请输入标题"/>
+                    <button @click="pinNote">{{selectedNote.favorite?"取消置顶":"置顶"}}</button>
+                    <button @click="removeNote">删除笔记</button>
+                </div>
+                <textarea v-model="selectedNote.content"></textarea>
+                <div class="toolbar status-bar">
+                    <span class="label">创建于：</span>
+                    <span class="value">{{selectedNote.created | date}}</span>
+                    <span class="lines">
+                        <span class="label">行数：</span>
+                        <span class="value">{{linesCount}}</span>
+                    </span>
+                    <span class="characters">
+                        <span class="label">字符数：</span>
+                        <span class="value">{{charactersCount}}</span>
+                    </span>
+                </div>
+            </section>
+            <aside class="preview" v-html="notePreview">
+            </aside>
+        </template>
+    </div>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
